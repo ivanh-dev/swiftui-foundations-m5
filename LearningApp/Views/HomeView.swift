@@ -28,9 +28,11 @@ struct HomeView: View {
                                     destination:
                                         ContentView()
                                         .onAppear(perform: {
-                                            model.beginModule(module.id)
+                                            model.getLessons(module: module) {
+                                                model.beginModule(module.id)
+                                            }
                                         }),
-                                    tag: module.id,
+                                    tag: module.id.hash,
                                     selection: $model.currentContentSelected) {
                                         
                                         // Learning Card
@@ -41,15 +43,18 @@ struct HomeView: View {
                                     destination:
                                         TestView()
                                             .onAppear(perform: {
-                                            model.beginTest(module.id)
+                                                model.getQuestions(module: module) {
+                                                    model.beginTest(module.id)
+                                                }
                                             }),
-                                    tag: module.id,
+                                    tag: module.id.hash,
                                     selection: $model.currentTestSelected) {
                                         
                                     // Test Card
                                     HomeViewRow(image: module.test.image, title: "\(module.category) Test", description: module.test.description, count: "\(module.test.questions.count) Lessons", time: module.test.time)
                                 }
                             }
+                            .padding(.bottom, 10)
                         }
                     }
                     .tint(.black)
@@ -57,6 +62,16 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Get started")
+            .onChange(of: model.currentContentSelected) { newValue in
+                if newValue == nil {
+                    model.currentModule = nil
+                }
+            }
+            .onChange(of: model.currentTestSelected) { newValue in
+                if newValue == nil {
+                    model.currentModule = nil
+                }
+            }
         }
         .navigationViewStyle(.stack)
     }

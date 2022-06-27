@@ -154,7 +154,7 @@ struct TestView: View {
         
         // Check if answer has been submitted
         if submitted == true {
-            if model.currentQuestionIndex + 1 == model.currentModule!.test.questions.count {
+            if model.currentQuestionIndex + 1 == model.currentModule!.test.questions.count  {
                 // This is the last question
                 return "Finish"
             }
